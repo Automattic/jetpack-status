@@ -57,12 +57,7 @@ class Test_Status extends TestCase {
 		Monkey\setUp();
 
 		// Set defaults for Core functionality.
-		Functions\when( 'get_current_blog_id' )->justReturn( 1 );
-		Functions\expect( 'site_url' )->atMost()->once()->andReturnUsing(
-			function () {
-				return $this->site_url;
-			}
-		);
+		Functions\when( 'site_url' )->justReturn( $this->site_url );
 		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
 		Functions\when( 'wp_parse_url' )->alias( 'parse_url' );
 		Functions\expect( 'defined' )->andReturnUsing(
@@ -76,7 +71,6 @@ class Test_Status extends TestCase {
 			}
 		);
 
-		Status\Cache::clear();
 		$this->status_obj = new Status();
 	}
 
@@ -87,7 +81,6 @@ class Test_Status extends TestCase {
 	 */
 	public function tear_down() {
 		Monkey\tearDown();
-		Status\Cache::clear();
 	}
 
 	/**
@@ -129,7 +122,7 @@ class Test_Status extends TestCase {
 	 * @covers Automattic\Jetpack\Status::is_offline_mode
 	 */
 	public function test_is_offline_mode_localhost() {
-		$this->site_url = 'localhost';
+		Functions\when( 'site_url' )->justReturn( 'localhost' );
 
 		Filters\expectApplied( 'jetpack_offline_mode' )->once()->with( true )->andReturn( true );
 
@@ -338,8 +331,8 @@ class Test_Status extends TestCase {
 	 * @param bool   $expected Expected return.
 	 */
 	public function test_is_staging_site_for_known_hosting_providers( $site_url, $expected ) {
-		$this->site_url = $site_url;
-		$result         = $this->status_obj->is_staging_site();
+		Functions\when( 'site_url' )->justReturn( $site_url );
+		$result = $this->status_obj->is_staging_site();
 		$this->assertSame(
 			$expected,
 			$result,
@@ -400,8 +393,8 @@ class Test_Status extends TestCase {
 	 * @param bool   $expected_response Expected response.
 	 */
 	public function test_is_local_site_for_known_tld( $site_url, $expected_response ) {
-		$this->site_url = $site_url;
-		$result         = $this->status_obj->is_local_site();
+		Functions\when( 'site_url' )->justReturn( $site_url );
+		$result = $this->status_obj->is_local_site();
 		$this->assertEquals(
 			$expected_response,
 			$result,
@@ -504,37 +497,4 @@ class Test_Status extends TestCase {
 			),
 		);
 	}
-
-	/**
-	 * Test result is cached.
-	 *
-	 * @dataProvider provide_cached
-	 * @param string      $func Function being tested.
-	 * @param string|null $one_call Method that should be called only once.
-	 * @param string|null $one_filter Filter that should be called only once.
-	 */
-	public function test_cached( $func, $one_call, $one_filter ) {
-		if ( $one_call ) {
-			Functions\expect( $one_call )->once();
-		}
-
-		$ret = $this->status_obj->$func();
-		$this->assertSame( $ret, $this->status_obj->$func() );
-
-		if ( $one_filter ) {
-			$this->assertSame( 1, Filters\applied( $one_filter ), "Filter $one_filter was only applied once" );
-		}
-	}
-
-	/** Data provider for test_cached */
-	public function provide_cached() {
-		return array(
-			array( 'is_offline_mode', null, 'jetpack_offline_mode' ),
-			array( 'is_multi_network', 'is_multisite', null ),
-			array( 'is_single_user_site', 'get_transient', null ),
-			array( 'is_local_site', null, 'jetpack_is_local_site' ),
-			array( 'is_staging_site', null, 'jetpack_is_staging_site' ),
-		);
-	}
-
 }
