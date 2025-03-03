@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Tests for Automattic\Jetpack\Status\Cache methods
  *
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Status test suite.
  */
-class Test_Cache extends TestCase {
+class Cache_Test extends TestCase {
 	/**
 	 * Test setup.
 	 *

@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Tests for Automattic\Jetpack\Status\Visitor methods
  *
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @covers \Automattic\Jetpack\Status\Visitor
  */
-class Test_Visitor extends TestCase {
+class Visitor_Test extends TestCase {
 	/**
 	 * Testing object.
 	 *

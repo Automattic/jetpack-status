@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Tests for Automattic\Jetpack\Status\Hosts methods
  *
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Status test suite.
  */
-class Test_Host extends TestCase {
+class Host_Test extends TestCase {
 	/**
 	 * Testing object.
 	 *
@@ -47,7 +47,6 @@ class Test_Host extends TestCase {
 		Constants::clear_constants();
 		Cache::clear();
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		unset( $_GET['calypso_env'] );
 	}
 

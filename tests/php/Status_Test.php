@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php
 /**
  * Tests for Automattic\Jetpack\Status methods
  *
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Status test suite.
  */
-class Test_Status extends TestCase {
+class Status_Test extends TestCase {
 	/**
 	 * Default site URL.
 	 *
@@ -311,7 +311,7 @@ class Test_Status extends TestCase {
 	protected function mock_wpdb_get_var( $return_value = null ) {
 		global $wpdb;
 
-		$wpdb = $this->getMockBuilder( \stdClass::class ) // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wpdb = $this->getMockBuilder( \stdClass::class )
 					->setMockClassName( 'wpdb' )
 					->addMethods( array( 'get_var' ) )
 					->getMock();
